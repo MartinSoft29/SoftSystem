@@ -7,12 +7,20 @@ class Router {
 
     init() {
         // Manejar clics en enlaces de navegación
+        const handleNavClick = (e) => {
+            e.preventDefault();
+            const page = e.target.getAttribute('href').substring(1);
+            this.navigate(page);
+        };
+
+        // Enlaces de navegación principal
         document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = e.target.getAttribute('href').substring(1);
-                this.navigate(page);
-            });
+            link.addEventListener('click', handleNavClick);
+        });
+
+        // Botones de acción (hero buttons)
+        document.querySelectorAll('.hero-btn').forEach(btn => {
+            btn.addEventListener('click', handleNavClick);
         });
 
         // Manejar botón atrás/adelante del navegador
@@ -79,12 +87,11 @@ window.addEventListener('scroll', () => {
     if (!ticking) {
         window.requestAnimationFrame(() => {
             const scrolled = window.pageYOffset;
-            const parallaxElements = document.querySelectorAll('.hero h1, .feature-card, .project-card');
-            parallaxElements.forEach((el, i) => {
-                const speed = 0.5 + (i * 0.1);
-                const yPos = -(scrolled * speed);
-                el.style.transform = `translateY(${yPos}px)`;
-            });
+            const heroTitle = document.querySelector('.hero h1');
+            if (heroTitle) {
+                const yPos = Math.min(scrolled * 0.08, 40);
+                heroTitle.style.transform = `translateY(${yPos}px)`;
+            }
             ticking = false;
         });
         ticking = true;
